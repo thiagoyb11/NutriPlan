@@ -4,9 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "format": "prettier --write src package.json package-lock.json README.md .vscode/extensions.json src-tauri/tauri.conf.json src-tauri/capabilities/default.json"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.11.4"
+    "@tauri-apps/cli": "^2.11.4",
+    "prettier": "^3.5.3"
   }
 }

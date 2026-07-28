@@ -42,6 +42,13 @@ struct MealSlot {
     fats: f32,
 }
 
+#[derive(Serialize)]
+struct ShoppingItem {
+    ingredient_id: u32,
+    name: String,
+    amount: f32,
+}
+
 fn database_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let app_data = app.path().app_data_dir().map_err(|e| e.to_string())?;
     std::fs::create_dir_all(&app_data).map_err(|e| e.to_string())?;
@@ -67,6 +74,16 @@ fn open_connection(app: &tauri::AppHandle) -> Result<Connection, String> {
     )
     .map_err(|e| e.to_string())?;
     normalize_ingredient_names(&mut conn)?;
+    conn.execute(
+        "DELETE FROM meal_slots WHERE rowid NOT IN (SELECT MIN(rowid) FROM meal_slots GROUP BY day, slot)",
+        [],
+    )
+    .map_err(|e| e.to_string())?;
+    conn.execute_batch(
+        "CREATE UNIQUE INDEX IF NOT EXISTS meal_slots_one_recipe_per_slot
+         ON meal_slots(day, slot);",
+    )
+    .map_err(|e| e.to_string())?;
     conn.execute_batch(
         "CREATE UNIQUE INDEX IF NOT EXISTS ingredients_unique_normalized_name
          ON ingredients(trim(name) COLLATE NOCASE);",
@@ -440,13 +457,10 @@ fn get_meals(app: tauri::AppHandle) -> Result<Vec<MealSlot>, String> {
 }
 
 #[tauri::command]
-fn save_meal(app: tauri::AppHandle, day: u8, slot: u8, recipe_ids: Vec<u32>) -> Result<(), String> {
-    if day > 6 || slot > 47 || recipe_ids.is_empty() {
+fn save_meal(app: tauri::AppHandle, day: u8, slot: u8, recipe_id: u32) -> Result<(), String> {
+    if day > 6 || slot > 47 {
         return Err("La comida no es válida.".into());
     }
-    let mut unique_ids = recipe_ids;
-    unique_ids.sort_unstable();
-    unique_ids.dedup();
     let mut conn = open_connection(&app)?;
     let tx = conn.transaction().map_err(|e| e.to_string())?;
     tx.execute(
@@ -454,24 +468,60 @@ fn save_meal(app: tauri::AppHandle, day: u8, slot: u8, recipe_ids: Vec<u32>) -> 
         params![day, slot],
     )
     .map_err(|e| e.to_string())?;
-    for recipe_id in unique_ids {
-        let exists: bool = tx
-            .query_row(
-                "SELECT EXISTS(SELECT 1 FROM recipes WHERE id = ?1)",
-                params![recipe_id],
-                |row| row.get(0),
-            )
-            .map_err(|e| e.to_string())?;
-        if !exists {
-            return Err("Una receta seleccionada ya no existe.".into());
-        }
-        tx.execute(
-            "INSERT INTO meal_slots (day, slot, recipe_id) VALUES (?1, ?2, ?3)",
-            params![day, slot, recipe_id],
+    let exists: bool = tx
+        .query_row(
+            "SELECT EXISTS(SELECT 1 FROM recipes WHERE id = ?1)",
+            params![recipe_id],
+            |row| row.get(0),
         )
         .map_err(|e| e.to_string())?;
+    if !exists {
+        return Err("La receta seleccionada ya no existe.".into());
     }
+    tx.execute(
+        "INSERT INTO meal_slots (day, slot, recipe_id) VALUES (?1, ?2, ?3)",
+        params![day, slot, recipe_id],
+    )
+    .map_err(|e| e.to_string())?;
     tx.commit().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn delete_meal(app: tauri::AppHandle, day: u8, slot: u8) -> Result<(), String> {
+    let conn = open_connection(&app)?;
+    conn.execute(
+        "DELETE FROM meal_slots WHERE day = ?1 AND slot = ?2",
+        params![day, slot],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn get_shopping_list(app: tauri::AppHandle) -> Result<Vec<ShoppingItem>, String> {
+    let conn = open_connection(&app)?;
+    let mut stmt = conn
+        .prepare(
+            "SELECT i.id, i.name, SUM(ri.amount)
+             FROM meal_slots m
+             JOIN recipe_ingredients ri ON ri.recipe_id = m.recipe_id
+             JOIN ingredients i ON i.id = ri.ingredient_id
+             GROUP BY i.id, i.name
+             ORDER BY i.name COLLATE NOCASE",
+        )
+        .map_err(|e| e.to_string())?;
+    let result = stmt
+        .query_map([], |row| {
+            Ok(ShoppingItem {
+                ingredient_id: row.get(0)?,
+                name: row.get(1)?,
+                amount: row.get(2)?,
+            })
+        })
+        .map_err(|e| e.to_string())?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?;
+    Ok(result)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -494,7 +544,9 @@ pub fn run() {
             update_recipe,
             delete_recipe,
             get_meals,
-            save_meal
+            save_meal,
+            delete_meal,
+            get_shopping_list
         ])
         .run(tauri::generate_context!())
         .expect("error while running NutriPlan");

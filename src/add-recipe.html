@@ -1,1 +1,39 @@
-<!doctype html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Nueva receta</title><link rel="stylesheet" href="/app.css"><script src="/popup.js" defer></script></head><body class="dialog-body"><section class="form-card"><h1>Nueva receta</h1><label for="name">Nombre</label><input id="name" placeholder="Nombre de la receta"><label for="file">Imagen (opcional)</label><div class="selected-row"><input id="file" readonly placeholder="Sin imagen seleccionada"><button id="upload-btn" type="button">Elegir</button></div><label>Ingredientes</label><button id="add-ingredient" type="button" class="primary">Añadir ingrediente</button><input id="ingredient-search" hidden placeholder="Buscar ingrediente..."><div id="ingredient-results" class="picker-results"></div><div id="selected-ingredients"></div><button id="submit" type="button">Guardar receta</button></section></body></html>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva receta</title>
+
+    <link rel="stylesheet" href="/app.css" />
+    <script src="/popup.js" defer></script>
+  </head>
+  <body class="dialog-body">
+    <section class="form-card">
+      <h1>Nueva receta</h1>
+
+      <label for="name">Nombre</label>
+      <input id="name" placeholder="Nombre de la receta" />
+
+      <label for="file">Imagen (opcional)</label>
+      <div class="selected-row">
+        <input id="file" readonly placeholder="Sin imagen seleccionada" />
+        <button id="upload-btn" type="button">Elegir</button>
+      </div>
+
+      <label>Ingredientes</label>
+      <button id="add-ingredient" type="button" class="primary">
+        Añadir ingrediente
+      </button>
+      <input
+        id="ingredient-search"
+        hidden
+        placeholder="Buscar ingrediente..."
+      />
+      <div id="ingredient-results" class="picker-results"></div>
+      <div id="selected-ingredients"></div>
+
+      <button id="submit" type="button">Guardar receta</button>
+    </section>
+  </body>
+</html>
