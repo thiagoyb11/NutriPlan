@@ -1,0 +1,83 @@
+,Alimento,Energía        (Kcal),Proteínas      (g),Carbohidra-tos totales   (g),Grasa Total     (g)
+9,Achicoria de Monte,46,2.8,7.7,1.2
+10,"Achicoria, hoja, fresca, cruda",21,1.6,2.9,0.3
+11,Achira (raíces),34,1.7,7.9,0.2
+12,"Ajo, bulbo, fresco, crudo",99,4.4,20.0,0.2
+13,"Alcaucil, inflorescencia, fresco, crudo",63,2.9,11.9,0.4
+14,"Alfalfa, hoja, fresca, cruda",57,6.6,6.8,0.4
+15,"Arveja, semilla, fresca, cruda",102,8.9,16.6,0.0
+17,"Arveja, semilla, fresca, hervida",77,5.8,13.4,0.0
+20,"Arveja, semilla, seca, partida, hervida",129,8.2,22.5,0.7
+21,"Avellana, pepita, seca",668,12.7,17.7,60.9
+22,"Batata, frita",212,1.7,35.0,7.2
+23,"Batata, hervida",92,1.2,21.7,0.0
+24,"Batata, raiz, fresca, cruda",84,1.1,19.8,0.0
+25,"Berenjena, pulpa, fresca, cruda",28,1.1,5.5,0.2
+26,"Berro (hojas y tallo), fresco, crudo",23,1.7,3.3,0.3
+27,"Brócoli, tallo de hoja, fresco, crudo",37,3.3,5.5,0.2
+28,"Cardo (penca y hojas), fresco, crudo",25,1.4,4.4,0.2
+29,"Castaña de Pará, pepita, cruda",731,18.1,2.4,72.1
+30,"Cebolla blanca, bulbo, cruda",17,0.8,3.5,0.0
+31,"Cebolla blanca, bulbo, hervida",10,0.6,1.8,0.0
+32,"Chaucha, vaina y semilla, cruda",22,2.4,3.2,0.0
+33,"Coliflor, pimpollo, fresco, crudo",31,2.4,4.9,0.2
+34,"Diente de león, hoja",33,2.6,6.6,0.4
+35,"Escarola crespa, hoja, cruda",24,1.6,4.0,0.2
+36,"Esparrago, tallo tierno, fresco, crudo",26,2.2,3.9,0.2
+37,"Espinaca, hoja, fresca, cruda",24,3.9,2.0,0.0
+38,"Espinaca, hoja, fresca, hervida",13,2.5,0.7,0.0
+39,"Garbanzo, grano entero, seco, hervido",125,6.1,20.2,2.2
+40,"Habas, semilla inmadura, fresca, cruda",99,6.7,16.3,0.8
+41,"Hinojo, tallo, fresco, crudo",24,1.9,3.6,0.2
+42,"Lengua de vaca, hojas, tejido fresco, parte comestible",43,3.1,7.6,0.8
+43,"Lenteja, semilla entera, seca, cruda",350,20.8,64.8,0.8
+44,"Lupino andino, con cáscara, semilla, crudo",399,37.8,39.5,10.0
+45,"Lupino andino, sin cáscara, semilla, crudo",411,38.4,38.3,11.6
+46,"Maní, semilla con piel, crudo",576,33.2,11.1,44.3
+47,"Maní, semilla sin piel, tostado",592,34.8,10.8,45.5
+48,"Mastuerzo (hoja y pecíolo), fresco, crudo",51,4.2,5.3,1.4
+49,"Mastuerzo, hoja",50,3.7,8.1,1.4
+50,"Nabo, hervido",11,0.8,1.9,0.0
+51,"Nabo, raiz (pulpa), fresco, crudo",10,1.0,1.5,0.0
+52,"Nuez, pepita",715,13.9,13.2,67.4
+53,"Papa, pulpa sin cáscara, fresca, cruda",88,2.7,19.3,0.0
+54,"Papa, pulpa sin cáscara, frita, bastón",162,2.9,23.6,6.2
+55,"Papa, pulpa sin cáscara, hervida ",88,2.4,19.6,0.0
+56,"Pepino, pulpa, fresco, crudo",15,0.7,2.7,0.1
+57,"Perejil, hoja, fresco, crudo",60,3.7,9.0,1.0
+58,"Piñon de araucaria, pepita, crudo",221,14.6,37.9,1.2
+59,"Pistacho, pepita, crudo",648,22.3,18.1,54.0
+60,"Poroto Alubia, semilla, seco",337,19.8,62.8,0.8
+61,"Poroto Carioca, semilla, seco",336,20.0,62.0,0.9
+62,"Poroto Colorado, semilla, seco",333,19.6,61.0,1.2
+63,"Poroto Grand Berry, semilla, seco",336,21.5,60.4,1.0
+64,"Poroto Great Northern, semilla, seco",326,21.0,60.6,0.5
+65,"Poroto Negro, semilla, seco",306,20.6,61.5,1.0
+66,"Poroto Novy Bean, semilla, seco",336,26.0,55.6,1.1
+67,"Poroto Oval, semilla, seco",328,18.2,63.7,1.1
+68,"Poroto Pallares, semilla, seco",322,16.6,63.3,0.6
+69,"Poroto Small Red, semilla, seco",336,25.3,56.7,0.8
+72,"Puerro (bulbo, tallo y hojas), fresco, crudo",45,2.5,7.9,0.4
+73,"Quinua, harina",341,4.4,78.7,1.0
+74,"Quinua, semilla, cruda",354,13.8,63.3,5.1
+75,"Rabanito, raiz, fresco, crudo",29,1.3,5.8,0.1
+77,"Remolacha, tubérculo, fresca, cruda",54,2.4,11.1,0.0
+78,"Remolacha, tubérculo, hervida",36,1.0,7.9,0.0
+79,"Repollito Bruselas, hoja, fresco, crudo ",58,4.4,8.9,0.5
+80,"Repollo blanco, hoja, fresco, crudo",17,2.4,1.9,0.0
+81,"Repollo blanco, hoja, hervido",16,2.2,1.8,0.0
+82,"Salsifí, raiz, fresco, crudo",85,3.5,15.5,1.0
+83,"Soja FT11, poroto seco",368,36.9,39.8,6.8
+85,"Tapioca, cruda (harina mandioca)",336,2.0,82.0,0.0
+86,"Tapioca, hervida",55,0.1,13.7,0.0
+87,"Tomate, fresco, crudo",20,1.0,4.1,0.0
+88,"Tomate, hervido",21,1.0,4.2,0.0
+89,"Tomate, jugo, fresco",11,1.0,1.7,0.0
+90,"Verdolaga, hoja",32,2.4,5.7,0.5
+91,"Verdolaga, hoja y tallo, fresca, cruda",23,1.6,3.3,0.4
+92,"Yuyo colorado, hoja",60,4.1,11.1,0.7
+93,"Zanahoria, jugo, fresco",22,1.0,4.4,0.0
+96,"Zapallito, parte tierna, fresco, crudo",13,0.8,2.4,0.0
+97,"Zapallito, parte tierna, hervido ",16,1.3,2.8,0.0
+98,"Zapallo, pulpa, fresco, crudo",27,0.5,5.8,0.2
+99,"Zapallo, pulpa, hervido",20,0.4,4.6,0.0

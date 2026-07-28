@@ -1,0 +1,44 @@
+,Alimento,Energía        (Kcal),Proteínas      (g),Carbohidratos totales             (g),Grasa Total     (g)
+7,"Cerdo, chorizo, fresco, crudo",454.0,13.0,1.1,44.2
+8,"Cerdo, costilla, a la parrilla",320.0,25.2,0.0,24.3
+9,"Cerdo, costilla flaca, cruda",250.0,19.9,0.0,18.9
+10,"Cerdo, jamón cocido",211.0,20.3,0.0,14.4
+11,"Cerdo, jamón crudo",473.0,18.0,0.0,44.6
+12,"Cerdo, panceta",670.0,8.3,0.0,70.8
+15,"Cordero, carne de la paleta, crudo",99.0,18.7,0.0,2.7
+16,"Cordero, carne de la paleta, flaca, a la parrilla",182.0,28.0,0.0,7.8
+19,"Pollo, asado a la parrilla",168.0,29.8,0.0,5.4
+20,"Pollo, asado al horno",162.0,28.4,0.0,5.4
+21,"Pollo, carne-pellejo-menudos, fresco, crudo",88.0,16.3,0.0,2.5
+22,"Pollo, hervido",198.0,23.1,0.0,11.7
+25,"Rana, carne de la pata, fresca, cruda",64.0,15.5,0.0,0.2
+34,"Vacuno, asado, fresco, crudo",170.0,18.4,0.0,10.7
+35,"Vacuno, bife, a la parrilla",189.0,24.6,0.0,10.1
+36,"Vacuno, bife angosto c/c de novillito, fresco, crudo",190.0,21.0,0.0,12.0
+37,"Vacuno, bola de lomo de novillito, fresco, crudo",114.0,22.0,0.0,3.2
+38,"Vacuno, brazuelo de novillito, fresco, crudo",120.0,21.0,0.0,3.9
+39,"Vacuno, caracú (médula de hueso largo), crudo",785.0,0.5,0.0,87.0
+40,"Vacuno, colita de cuadril de novillito, fresco, crudo",143.0,21.0,0.0,6.7
+41,"Vacuno, corazón de cuadril de novillito, fresco, crudo",116.0,22.0,0.0,2.6
+42,"Vacuno, cuadril y bife angosto flaco, fresco, crudo",111.0,21.0,0.0,3.0
+43,"Vacuno, en conserva, enlatado",224.0,23.7,0.0,14.4
+48,"Vacuno, hígado, crudo",132.0,19.7,6.0,3.2
+49,"Vacuno, jugo de carne",33.0,6.8,0.0,0.6
+50,"Vacuno, lomo, fresco, crudo",116.0,20.0,0.0,4.0
+51,"Vacuno, nalga de novillito, fresco, crudo",106.0,22.0,0.0,1.7
+52,"Vacuno, nalga, fresco, crudo",97.0,21.2,0.0,1.4
+53,"Vacuno, paleta de novillito, fresco, crudo",125.0,19.0,0.0,5.5
+54,"Vacuno, paletín o marucha de novillito, fresco, crudo",132.0,20.0,0.0,6.1
+55,"Vacuno, palomita de novillito, fresco, crudo",116.0,20.0,0.0,3.7
+56,"Vacuno, pasta de hígado",335.0,14.0,0.0,31.0
+57,"Vacuno, peceto de novillito, fresco, crudo",125.0,23.0,0.0,1.9
+58,"Vacuno, pecho de novillito, fresco, crudo",139.0,20.0,0.0,6.5
+59,"Vacuno, riñon, fresco, crudo",137.0,15.0,0.9,8.1
+60,"Vacuno, tapa de cuadril de novillito, fresco, crudo",211.0,20.0,0.0,15.0
+61,"Vacuno, ternera, costilla flaca, a la parrilla",139.0,27.2,0.0,3.4
+62,"Vacuno, ternera, costilla flaca, fresco, crudo",95.0,20.0,0.0,1.7
+63,"Vacuno, tortuguita de novillito, fresco, crudo",154.0,22.0,0.0,7.6
+64,"Vacuno, vacío, a la parrilla",258.0,25.6,0.0,17.3
+65,"Vacuno, vacío, al horno",241.0,28.1,0.0,14.3
+66,"Vacuno, vacío de novillito, fresco, crudo",174.0,20.0,0.0,11.0
+67,"Vacuno, vacío flaco, fresco, crudo",171.0,23.8,0.0,8.4
