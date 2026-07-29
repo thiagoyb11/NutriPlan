@@ -251,6 +251,128 @@ main {
   font-size: 0.79rem;
 }
 
+.dashboard-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.dashboard-heading h2,
+.settings-panel h2 {
+  margin: 0;
+  color: #1e1b4b;
+}
+.dashboard-heading p,
+.settings-panel > p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 1rem;
+}
+.dashboard-day,
+.settings-panel {
+  padding: 1.2rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgb(15 23 42 / 0.05);
+  animation: card-in 0.4s ease both;
+}
+.dashboard-day:nth-child(2) {
+  animation-delay: 0.04s;
+}
+.dashboard-day:nth-child(3) {
+  animation-delay: 0.08s;
+}
+.dashboard-day:nth-child(4) {
+  animation-delay: 0.12s;
+}
+.dashboard-day:nth-child(5) {
+  animation-delay: 0.16s;
+}
+.dashboard-day:nth-child(6) {
+  animation-delay: 0.2s;
+}
+.dashboard-day:nth-child(7) {
+  animation-delay: 0.24s;
+}
+.dashboard-day h3 {
+  margin: 0 0 1rem;
+  color: #312e81;
+}
+.macro-progress + .macro-progress {
+  margin-top: 0.9rem;
+}
+.macro-progress-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-bottom: 0.36rem;
+  color: #475569;
+  font-size: 0.82rem;
+}
+.macro-progress-label span:last-child {
+  color: #64748b;
+  text-align: right;
+}
+.macro-progress-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8edf3;
+}
+.macro-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.35s ease;
+}
+.macro-progress-fill.low {
+  background: #ef4444;
+}
+.macro-progress-fill.medium {
+  background: #f59e0b;
+}
+.macro-progress-fill.good {
+  background: #22c55e;
+}
+.settings-panel {
+  width: min(100%, 620px);
+  margin: clamp(1rem, 8vh, 5rem) auto;
+}
+.settings-subsection {
+  margin-top: 1.5rem;
+  padding: 1.2rem;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  background: #f8faff;
+}
+.settings-subsection h3 {
+  margin: 0;
+  color: #312e81;
+  font-size: 1rem;
+}
+.settings-subsection p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.goal-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.3rem;
+}
+.goal-form label {
+  display: grid;
+  gap: 0.4rem;
+  color: #475569;
+  font-weight: 600;
+}
+
 .plan-wrap {
   max-width: 100%;
   max-height: calc(100dvh - 130px);
@@ -762,7 +884,7 @@ main {
     padding: 0;
   }
   .sidebar nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.4rem;
   }
   .sidebar nav button {
@@ -770,6 +892,9 @@ main {
     padding: 0.65rem 0.35rem;
     font-size: 0.8rem;
     text-align: center;
+  }
+  .dashboard-heading button {
+    width: 100%;
   }
   main {
     padding: 1rem;
@@ -821,7 +946,7 @@ main {
 }
 @media (max-width: 380px) {
   .sidebar nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .grid {
     grid-template-columns: 1fr;

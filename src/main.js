@@ -49,7 +49,7 @@ function input(placeholder, type = "text") {
   return element;
 }
 
-function openModal(title, buildContent, size = "normal") {
+function openModal(title, buildContent, size = "normal", { onClose } = {}) {
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
   overlay.setAttribute("role", "presentation");
@@ -73,14 +73,12 @@ function openModal(title, buildContent, size = "normal") {
   const closeModal = () => {
     document.removeEventListener("keydown", onKey);
     overlay.remove();
+    onClose?.();
   };
   const onKey = (event) => {
     if (event.key === "Escape") closeModal();
   };
   close.addEventListener("click", closeModal);
-  overlay.addEventListener("click", (event) => {
-    if (event.target === overlay) closeModal();
-  });
   document.addEventListener("keydown", onKey);
   buildContent(body, closeModal);
   setTimeout(() => close.focus(), 0);
@@ -111,27 +109,39 @@ function confirmModal(title, message, onConfirm) {
   });
 }
 
-function createPicker(items, labelOf, onPick, placeholder) {
+function createPicker(
+  items,
+  labelOf,
+  onPick,
+  placeholder,
+  { emptyAction } = {},
+) {
   const search = input(placeholder);
   const results = document.createElement("div");
   results.className = "picker-results";
   const render = () => {
     results.replaceChildren();
-    const query = search.value.trim().toLowerCase();
+    const query = search.value.trim();
     if (!query) return;
-    items
-      .filter((item) => labelOf(item).toLowerCase().includes(query))
-      .slice(0, 12)
-      .forEach((item) => {
-        const option = button(labelOf(item), "choice");
-        option.addEventListener("click", () => {
-          onPick(item);
-          search.value = "";
-          results.replaceChildren();
-          search.focus();
-        });
-        results.appendChild(option);
+    const matches = items
+      .filter((item) =>
+        labelOf(item).toLowerCase().includes(query.toLowerCase()),
+      )
+      .slice(0, 12);
+    matches.forEach((item) => {
+      const option = button(labelOf(item), "choice");
+      option.addEventListener("click", () => {
+        onPick(item);
+        search.value = "";
+        results.replaceChildren();
+        search.focus();
       });
+      results.appendChild(option);
+    });
+    if (!matches.length && emptyAction) {
+      const action = emptyAction(query);
+      if (action) results.appendChild(action);
+    }
   };
   search.addEventListener("input", render);
   return [search, results];
@@ -194,6 +204,28 @@ async function openRecipeForm(recipe = null) {
           renderSelected();
         },
         "Buscar ingrediente...",
+        {
+          emptyAction: (query) => {
+            const addIngredient = button(
+              `+ Agregar “${query}” como ingrediente`,
+              "choice picker-create",
+            );
+            addIngredient.addEventListener("click", () => {
+              openIngredientForm({
+                initialName: query,
+                onSaved: (ingredient) => {
+                  ingredients.push(ingredient);
+                  selected.set(ingredient.id, { ...ingredient, amount: 100 });
+                  renderSelected();
+                  search.value = "";
+                  results.replaceChildren();
+                },
+                onClosed: () => setTimeout(() => search.focus(), 0),
+              });
+            });
+            return addIngredient;
+          },
+        },
       );
       const save = button(recipe ? "Guardar cambios" : "Guardar receta");
       save.classList.add("modal-primary");
@@ -419,58 +451,67 @@ function ingredientCard(ingredient) {
   card.append(title, macros);
   return card;
 }
-function openIngredientForm() {
-  openModal("Nuevo ingrediente", (body, close) => {
-    const name = input("Nombre del ingrediente");
-    const fields = [
-      ["Calorías", "calories"],
-      ["Proteína (g)", "protein"],
-      ["Carbohidratos (g)", "carbs"],
-      ["Grasas (g)", "fats"],
-    ];
-    const values = {};
-    const grid = document.createElement("div");
-    grid.className = "nutrition-fields";
-    fields.forEach(([labelText, key]) => {
-      const label = document.createElement("label");
-      label.textContent = labelText;
-      const value = input("0", "number");
-      value.min = "0";
-      value.step = "0.1";
-      value.value = "0";
-      values[key] = value;
-      label.appendChild(value);
-      grid.appendChild(label);
-    });
-    const save = button("Guardar ingrediente");
-    save.classList.add("modal-primary");
-    save.addEventListener("click", async () => {
-      const payload = {
-        name: name.value.trim(),
-        calories: Number(values.calories.value),
-        protein: Number(values.protein.value),
-        carbs: Number(values.carbs.value),
-        fats: Number(values.fats.value),
-      };
-      if (
-        !payload.name ||
-        Object.values(payload)
-          .slice(1)
-          .some((value) => !Number.isFinite(value) || value < 0)
-      )
-        return showToast("Completa un nombre y valores nutricionales válidos.");
-      try {
-        await invoke("save_ingredient", payload);
-        close();
-        showToast("Ingrediente agregado.", "success");
-        showIngredients();
-      } catch (error) {
-        showError(error);
-      }
-    });
-    body.append(name, grid, save);
-    name.focus();
-  });
+function openIngredientForm({ initialName = "", onSaved, onClosed } = {}) {
+  openModal(
+    "Nuevo ingrediente",
+    (body, close) => {
+      const name = input("Nombre del ingrediente");
+      name.value = initialName;
+      const fields = [
+        ["Calorías", "calories"],
+        ["Proteína (g)", "protein"],
+        ["Carbohidratos (g)", "carbs"],
+        ["Grasas (g)", "fats"],
+      ];
+      const values = {};
+      const grid = document.createElement("div");
+      grid.className = "nutrition-fields";
+      fields.forEach(([labelText, key]) => {
+        const label = document.createElement("label");
+        label.textContent = labelText;
+        const value = input("0", "number");
+        value.min = "0";
+        value.step = "0.1";
+        value.value = "0";
+        values[key] = value;
+        label.appendChild(value);
+        grid.appendChild(label);
+      });
+      const save = button("Guardar ingrediente");
+      save.classList.add("modal-primary");
+      save.addEventListener("click", async () => {
+        const payload = {
+          name: name.value.trim(),
+          calories: Number(values.calories.value),
+          protein: Number(values.protein.value),
+          carbs: Number(values.carbs.value),
+          fats: Number(values.fats.value),
+        };
+        if (
+          !payload.name ||
+          Object.values(payload)
+            .slice(1)
+            .some((value) => !Number.isFinite(value) || value < 0)
+        )
+          return showToast(
+            "Completa un nombre y valores nutricionales válidos.",
+          );
+        try {
+          const ingredient = await invoke("save_ingredient", payload);
+          onSaved?.(ingredient);
+          close();
+          showToast("Ingrediente agregado.", "success");
+          if (!onSaved) showIngredients();
+        } catch (error) {
+          showError(error);
+        }
+      });
+      body.append(name, grid, save);
+      name.focus();
+    },
+    "normal",
+    { onClose: onClosed },
+  );
 }
 async function showIngredients() {
   activeView = "ingredients";
@@ -502,6 +543,166 @@ async function showIngredients() {
   } catch (error) {
     showError(error);
   }
+}
+
+const macroDefinitions = [
+  { key: "calories", label: "Calorías", unit: "kcal" },
+  { key: "protein", label: "Proteína", unit: "g" },
+  { key: "carbs", label: "Carbohidratos", unit: "g" },
+  { key: "fats", label: "Grasas", unit: "g" },
+];
+
+function progressState(percent) {
+  if (percent < 50) return "low";
+  if (percent < 80) return "medium";
+  return "good";
+}
+
+function progressBar(macro, amount, goal) {
+  const percent = goal > 0 ? (amount / goal) * 100 : 0;
+  const row = document.createElement("div");
+  row.className = "macro-progress";
+  const label = document.createElement("div");
+  label.className = "macro-progress-label";
+  const name = document.createElement("span");
+  name.textContent = macro.label;
+  const value = document.createElement("span");
+  value.textContent =
+    goal > 0
+      ? `${format(amount)} / ${format(goal)} ${macro.unit} · ${Math.round(percent)}%`
+      : `${format(amount)} ${macro.unit} · sin objetivo`;
+  label.append(name, value);
+  const track = document.createElement("div");
+  track.className = "macro-progress-track";
+  track.setAttribute("role", "progressbar");
+  track.setAttribute(
+    "aria-label",
+    `${macro.label}: ${Math.round(percent)}% del objetivo`,
+  );
+  track.setAttribute("aria-valuemin", "0");
+  track.setAttribute("aria-valuemax", "100");
+  track.setAttribute(
+    "aria-valuenow",
+    String(Math.min(Math.round(percent), 100)),
+  );
+  const fill = document.createElement("div");
+  fill.className = `macro-progress-fill ${progressState(percent)}`;
+  fill.style.width = `${Math.min(Math.max(percent, 0), 100)}%`;
+  track.appendChild(fill);
+  row.append(label, track);
+  return row;
+}
+
+async function showDashboard() {
+  activeView = "dashboard";
+  setActiveView("dashboard");
+  content.replaceChildren();
+  const [meals, goals] = await Promise.all([
+    invoke("get_meals"),
+    invoke("get_macro_goals"),
+  ]);
+  const header = document.createElement("section");
+  header.className = "dashboard-heading";
+  const title = document.createElement("div");
+  const heading = document.createElement("h2");
+  heading.textContent = "Dashboard semanal";
+  const subtitle = document.createElement("p");
+  subtitle.textContent =
+    "Avance diario frente a tus objetivos de macronutrientes.";
+  title.append(heading, subtitle);
+  const settings = button("Configurar objetivos", "secondary");
+  settings.addEventListener("click", showSettings);
+  header.append(title, settings);
+  const grid = document.createElement("section");
+  grid.className = "dashboard-grid";
+  dayNames.forEach((dayName, day) => {
+    const totals = meals
+      .filter((meal) => meal.day === day)
+      .reduce(
+        (result, meal) => {
+          macroDefinitions.forEach(
+            ({ key }) => (result[key] += Number(meal[key]) || 0),
+          );
+          return result;
+        },
+        { calories: 0, protein: 0, carbs: 0, fats: 0 },
+      );
+    const card = document.createElement("article");
+    card.className = "dashboard-day";
+    const name = document.createElement("h3");
+    name.textContent = dayName;
+    card.appendChild(name);
+    macroDefinitions.forEach((macro) =>
+      card.appendChild(
+        progressBar(macro, totals[macro.key], Number(goals[macro.key]) || 0),
+      ),
+    );
+    grid.appendChild(card);
+  });
+  content.append(header, grid);
+}
+
+async function showSettings() {
+  activeView = "settings";
+  setActiveView("config");
+  content.replaceChildren();
+  const goals = await invoke("get_macro_goals");
+  const panel = document.createElement("section");
+  panel.className = "settings-panel";
+  const heading = document.createElement("h2");
+  heading.textContent = "Configuración";
+  const description = document.createElement("p");
+  description.textContent =
+    "Personaliza cómo se evalúa tu planificación semanal.";
+  const section = document.createElement("section");
+  section.className = "settings-subsection";
+  const sectionHeading = document.createElement("h3");
+  sectionHeading.textContent = "Objetivos diarios";
+  const sectionDescription = document.createElement("p");
+  sectionDescription.textContent =
+    "Se aplican a todos los días del dashboard semanal.";
+  const form = document.createElement("form");
+  form.className = "goal-form";
+  const fields = {};
+  macroDefinitions.forEach((macro) => {
+    const label = document.createElement("label");
+    label.textContent = `${macro.label} diaria (${macro.unit})`;
+    const field = input("0", "number");
+    field.min = "0";
+    field.step = "0.1";
+    field.value = Number(goals[macro.key]) || 0;
+    fields[macro.key] = field;
+    label.appendChild(field);
+    form.appendChild(label);
+  });
+  const save = button("Guardar objetivos");
+  save.type = "submit";
+  form.appendChild(save);
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const values = Object.fromEntries(
+      macroDefinitions.map(({ key }) => [key, Number(fields[key].value)]),
+    );
+    if (
+      Object.values(values).some(
+        (value) => !Number.isFinite(value) || value < 0,
+      )
+    )
+      return showToast("Indica objetivos diarios válidos.");
+    try {
+      save.disabled = true;
+      await invoke("save_macro_goals", values);
+      showToast("Objetivos guardados.", "success");
+      await showDashboard();
+    } catch (error) {
+      showError(error);
+    } finally {
+      save.disabled = false;
+    }
+  });
+  section.append(sectionHeading, sectionDescription, form);
+  panel.append(heading, description, section);
+  content.appendChild(panel);
 }
 const slotLabel = (slot) =>
   `${String(Math.floor((slot * 30) / 60)).padStart(2, "0")}:${String((slot * 30) % 60).padStart(2, "0")}`;
@@ -698,6 +899,12 @@ async function showPlan() {
 document.getElementById("recetas-btn").addEventListener("click", showRecipes);
 document.getElementById("ing-btn").addEventListener("click", showIngredients);
 document
+  .getElementById("dashboard-btn")
+  .addEventListener("click", () => showDashboard().catch(showError));
+document
   .getElementById("pl-btn")
   .addEventListener("click", () => showPlan().catch(showError));
+document
+  .getElementById("config-btn")
+  .addEventListener("click", () => showSettings().catch(showError));
 showRecipes();
