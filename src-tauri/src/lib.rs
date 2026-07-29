@@ -49,6 +49,14 @@ struct ShoppingItem {
     amount: f32,
 }
 
+#[derive(Serialize)]
+struct MacroGoals {
+    calories: f32,
+    protein: f32,
+    carbs: f32,
+    fats: f32,
+}
+
 fn database_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let app_data = app.path().app_data_dir().map_err(|e| e.to_string())?;
     std::fs::create_dir_all(&app_data).map_err(|e| e.to_string())?;
@@ -70,7 +78,20 @@ fn open_connection(app: &tauri::AppHandle) -> Result<Connection, String> {
            recipe_id INTEGER NOT NULL,
            PRIMARY KEY(day, slot, recipe_id),
            FOREIGN KEY(recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
+         );
+         CREATE TABLE IF NOT EXISTS macro_goals (
+           id INTEGER PRIMARY KEY CHECK(id = 1),
+           calories REAL NOT NULL DEFAULT 0 CHECK(calories >= 0),
+           protein REAL NOT NULL DEFAULT 0 CHECK(protein >= 0),
+           carbs REAL NOT NULL DEFAULT 0 CHECK(carbs >= 0),
+           fats REAL NOT NULL DEFAULT 0 CHECK(fats >= 0)
          );",
+    )
+    .map_err(|e| e.to_string())?;
+    ensure_macro_goals_schema(&conn)?;
+    conn.execute(
+        "INSERT OR IGNORE INTO macro_goals (id, calories, protein, carbs, fats) VALUES (1, 0, 0, 0, 0)",
+        [],
     )
     .map_err(|e| e.to_string())?;
     normalize_ingredient_names(&mut conn)?;
@@ -90,6 +111,26 @@ fn open_connection(app: &tauri::AppHandle) -> Result<Connection, String> {
     )
     .map_err(|e| e.to_string())?;
     Ok(conn)
+}
+
+fn ensure_macro_goals_schema(conn: &Connection) -> Result<(), String> {
+    let has_calories = conn
+        .prepare("PRAGMA table_info(macro_goals)")
+        .map_err(|e| e.to_string())?
+        .query_map([], |row| row.get::<_, String>(1))
+        .map_err(|e| e.to_string())?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?
+        .iter()
+        .any(|name| name == "calories");
+    if !has_calories {
+        conn.execute(
+            "ALTER TABLE macro_goals ADD COLUMN calories REAL NOT NULL DEFAULT 0 CHECK(calories >= 0)",
+            [],
+        )
+        .map_err(|e| e.to_string())?;
+    }
+    Ok(())
 }
 
 fn normalize_ingredient_names(conn: &mut Connection) -> Result<(), String> {
@@ -524,6 +565,47 @@ fn get_shopping_list(app: tauri::AppHandle) -> Result<Vec<ShoppingItem>, String>
     Ok(result)
 }
 
+#[tauri::command]
+fn get_macro_goals(app: tauri::AppHandle) -> Result<MacroGoals, String> {
+    let conn = open_connection(&app)?;
+    conn.query_row(
+        "SELECT calories, protein, carbs, fats FROM macro_goals WHERE id = 1",
+        [],
+        |row| {
+            Ok(MacroGoals {
+                calories: row.get(0)?,
+                protein: row.get(1)?,
+                carbs: row.get(2)?,
+                fats: row.get(3)?,
+            })
+        },
+    )
+    .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn save_macro_goals(
+    app: tauri::AppHandle,
+    calories: f32,
+    protein: f32,
+    carbs: f32,
+    fats: f32,
+) -> Result<(), String> {
+    if [calories, protein, carbs, fats]
+        .iter()
+        .any(|value| !value.is_finite() || *value < 0.0)
+    {
+        return Err("Indica objetivos diarios válidos.".into());
+    }
+    let conn = open_connection(&app)?;
+    conn.execute(
+        "UPDATE macro_goals SET calories = ?1, protein = ?2, carbs = ?3, fats = ?4 WHERE id = 1",
+        params![calories, protein, carbs, fats],
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -546,7 +628,9 @@ pub fn run() {
             get_meals,
             save_meal,
             delete_meal,
-            get_shopping_list
+            get_shopping_list,
+            get_macro_goals,
+            save_macro_goals
         ])
         .run(tauri::generate_context!())
         .expect("error while running NutriPlan");
