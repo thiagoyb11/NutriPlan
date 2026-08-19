@@ -2,7 +2,7 @@
 
 Aplicación de escritorio para organizar recetas, consultar información nutricional y planificar comidas semanales.
 
-Está construida con **Tauri 2**, Rust, JavaScript nativo y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
+Está construida con **React 19**, **Vite**, **Tauri 2**, Rust y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
 
 ## Funciones
 
@@ -27,6 +27,13 @@ Está construida con **Tauri 2**, Rust, JavaScript nativo y SQLite. Los datos se
 ```bash
 npm install
 npm run tauri dev
+```
+
+Para ejecutar o compilar únicamente el frontend:
+
+```bash
+npm run dev
+npm run build
 ```
 
 En PowerShell, si la política de ejecución bloquea `npm`, usa `npm.cmd`:
@@ -59,7 +66,8 @@ Las imágenes seleccionadas para recetas también se guardan en ese directorio d
 ## Estructura
 
 ```text
-src/          Interfaz y estilos de la aplicación
+src/          Aplicación React, componentes, servicios y estilos
+dist/         Frontend compilado por Vite (generado)
 src-tauri/    Backend Rust, configuración Tauri y base inicial SQLite
 data/         Datos fuente de ingredientes
 ```
