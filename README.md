@@ -2,7 +2,7 @@
 
 Aplicación de escritorio para organizar recetas, consultar información nutricional y planificar comidas semanales.
 
-Está construida con **React 19**, **TypeScript**, **Vite**, **Tauri 2**, Rust y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
+Está construida con **React 19**, **TypeScript**, **Tailwind CSS 4**, **Vite**, **Tauri 2**, Rust y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
 
 ## Funciones
 

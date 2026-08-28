@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Inter, "Segoe UI", system-ui, sans-serif;
+
+  --color-canvas: #f6f8fc;
+  --color-surface: #ffffff;
+  --color-ink: #1e293b;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #5b50e7;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+  --color-brand-950: #1e1b4b;
+
+  --shadow-soft: 0 3px 12px rgb(15 23 42 / 0.05);
+  --shadow-card: 0 13px 26px rgb(15 23 42 / 0.1);
+  --shadow-brand: 0 8px 18px rgb(79 70 229 / 0.22);
+  --shadow-modal: 0 24px 70px rgb(15 23 42 / 0.3);
+
+  --animate-page-in: page-in 0.38s ease both;
+  --animate-card-in: card-in 0.4s ease both;
+  --animate-row-in: row-in 0.25s ease both;
+  --animate-entry-in: entry-in 0.3s ease both;
+  --animate-fade-in: fade-in 0.18s ease both;
+  --animate-toast-in: toast-in 0.3s ease both;
+  --animate-modal-in: modal-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-float-soft: float-soft 7s ease-in-out infinite;
+
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes row-in {
+    from { opacity: 0; transform: translateX(-5px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes entry-in {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes modal-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes float-soft {
+    50% { transform: translate(-20px, 18px) scale(1.07); }
+  }
+}
+
+@layer base {
+  :root {
+    @apply bg-canvas font-sans text-ink;
+    font-synthesis: none;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { min-width: 0; min-height: 100%; }
+  body { margin: 0; overflow-x: hidden; }
+  button, input { font: inherit; }
+
+  button {
+    @apply relative max-w-full cursor-pointer overflow-hidden rounded-[10px] border-0 bg-linear-to-br from-brand-600 to-brand-700 px-4 py-[0.7rem] text-white shadow-brand transition duration-200 ease-out hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:scale-[0.97] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-400/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:grayscale;
+  }
+
+  button.danger {
+    @apply bg-linear-to-br from-red-500 to-rose-700 shadow-md shadow-red-500/20 hover:shadow-lg hover:shadow-red-500/25;
+  }
+
+  input {
+    @apply w-full min-w-0 rounded-[10px] border border-slate-300 bg-surface px-[0.85rem] py-[0.72rem] text-ink transition duration-200 hover:border-brand-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 focus:outline-none;
+  }
+}
+
+@layer components {
+  .app-shell { @apply flex min-h-screen min-w-0; }
+
+  .sidebar {
+    @apply sticky top-0 flex min-h-screen w-[250px] shrink-0 self-start flex-col border-r border-slate-200 bg-linear-to-b from-white to-brand-50/40 px-4 py-[1.65rem] shadow-[8px_0_28px_rgb(15_23_42/0.04)];
+  }
+  .sidebar h1 { @apply mb-7 px-3 text-[1.55rem] font-bold tracking-[-0.04em] text-brand-900; }
+  .sidebar nav { @apply grid min-w-0 gap-[0.45rem]; }
+  .sidebar nav button { @apply flex w-full min-w-0 bg-none px-[0.9rem] py-[0.78rem] text-left font-semibold text-slate-600 shadow-none hover:bg-brand-50 hover:text-brand-700 hover:shadow-none; }
+  .sidebar nav button.active { @apply bg-linear-to-br from-brand-600 to-brand-700 text-white shadow-brand; }
+
+  main { @apply min-w-0 flex-1 animate-page-in p-[clamp(1rem,3vw,2rem)]; }
+
+  .hero {
+    @apply relative mb-5 flex min-h-[148px] flex-wrap items-center gap-[0.8rem] overflow-hidden rounded-[18px] border border-brand-100 bg-linear-[120deg] from-brand-100/80 via-brand-50/30 to-emerald-100/70 p-[clamp(1rem,3vw,2rem)] shadow-[0_8px_25px_rgb(67_56_202/0.08)];
+  }
+  .hero::after { @apply pointer-events-none absolute -top-[120px] -right-[75px] h-[270px] w-[270px] animate-float-soft rounded-full bg-brand-400/20 content-['']; }
+  .hero input { @apply relative z-1 max-w-[480px] flex-[1_1_250px]; }
+  .hero button { @apply relative z-1 flex-[0_1_auto]; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 225px), 1fr)); gap: clamp(0.75rem, 1.6vw, 1.2rem); }
+  .card { @apply flex min-h-[188px] min-w-0 animate-card-in flex-col gap-3 overflow-hidden rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-soft transition duration-200 hover:-translate-y-[5px] hover:border-brand-200 hover:shadow-card; }
+  .card h3 { @apply m-0 min-w-0 text-[1.05rem] leading-[1.3] break-words; }
+  .recipe-image { @apply -mx-[0.15rem] mt-[-0.15rem] h-[118px] scale-100 rounded-[11px] bg-slate-200 bg-cover bg-center transition duration-300; }
+  .recipe-card:hover .recipe-image { @apply scale-[1.025] saturate-[1.12]; }
+  .macros { @apply m-0 text-[0.87rem] leading-[1.55] break-words whitespace-pre-line text-slate-500; }
+  .card-actions { @apply mt-auto flex flex-wrap gap-[0.45rem]; }
+  .card-actions button { @apply flex-[1_1_92px] px-[0.58rem] py-[0.52rem] text-[0.79rem]; }
+
+  .dashboard-heading { @apply mb-5 flex flex-wrap items-center justify-between gap-4; }
+  .dashboard-heading h2, .settings-panel h2 { @apply m-0 text-brand-950; }
+  .dashboard-heading p, .settings-panel > p { @apply mt-[0.35rem] mb-0 text-slate-500; }
+  .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 1rem; }
+  .dashboard-day, .settings-panel { @apply animate-card-in rounded-2xl border border-slate-200 bg-surface p-[1.2rem] shadow-soft; }
+  .dashboard-day:nth-child(2) { animation-delay: 0.04s; }
+  .dashboard-day:nth-child(3) { animation-delay: 0.08s; }
+  .dashboard-day:nth-child(4) { animation-delay: 0.12s; }
+  .dashboard-day:nth-child(5) { animation-delay: 0.16s; }
+  .dashboard-day:nth-child(6) { animation-delay: 0.2s; }
+  .dashboard-day:nth-child(7) { animation-delay: 0.24s; }
+  .dashboard-day h3 { @apply mt-0 mb-4 text-brand-900; }
+  .macro-progress + .macro-progress { @apply mt-[0.9rem]; }
+  .macro-progress-label { @apply mb-[0.36rem] flex justify-between gap-[0.6rem] text-[0.82rem] text-slate-600; }
+  .macro-progress-label span:last-child { @apply text-right text-slate-500; }
+  .macro-progress-track { @apply h-[10px] overflow-hidden rounded-full bg-slate-200; }
+  .macro-progress-fill { @apply h-full rounded-[inherit] transition-[width] duration-300; }
+  .macro-progress-fill.low { @apply bg-red-500; }
+  .macro-progress-fill.medium { @apply bg-amber-500; }
+  .macro-progress-fill.good { @apply bg-emerald-500; }
+
+  .settings-panel { width: min(100%, 620px); margin: clamp(1rem, 8vh, 5rem) auto; }
+  .settings-subsection { @apply mt-6 rounded-xl border border-brand-100 bg-brand-50/45 p-[1.2rem]; }
+  .settings-subsection h3 { @apply m-0 text-base text-brand-900; }
+  .settings-subsection p { @apply mt-[0.35rem] mb-0 text-sm text-slate-500; }
+  .goal-form { @apply mt-[1.3rem] grid gap-4; }
+  .goal-form label { @apply grid gap-[0.4rem] font-semibold text-slate-600; }
+
+  .plan-wrap { @apply max-w-full overflow-auto rounded-[14px] border border-slate-200 bg-surface shadow-soft; max-height: calc(100dvh - 130px); }
+  .plan-heading { @apply mb-4 flex flex-wrap items-center justify-between gap-[0.8rem]; }
+  .plan-heading h2 { @apply m-0; }
+  .plan-table { width: max(100%, 900px); min-width: 900px; border-collapse: separate; border-spacing: 0; }
+  .plan-table th, .plan-table td { @apply border-r border-b border-slate-200 p-[0.45rem] align-top; }
+  .plan-table th { @apply z-1 bg-slate-50 text-[0.78rem] font-bold text-slate-600; }
+  .plan-table tr:first-child th { @apply sticky top-0 z-3; }
+  .plan-table tr > th:first-child { @apply sticky left-0 z-2 min-w-[65px] text-right; }
+  .plan-table tr:first-child th:first-child { @apply z-4; }
+  .plan-cell { @apply relative h-[62px] min-w-[112px] cursor-pointer p-0! transition duration-200 hover:bg-brand-50 hover:shadow-[inset_0_0_0_2px_var(--color-brand-200)]; width: 12.5%; }
+  .meal-entry { @apply relative flex h-full w-full animate-entry-in items-center justify-center overflow-hidden rounded-none border border-brand-200 bg-brand-50 p-[0.45rem] text-center text-[0.72rem] leading-[1.25] text-ellipsis whitespace-nowrap text-brand-800; }
+  .meal-entry::after { @apply pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-20 w-max max-w-[260px] rounded-[10px] bg-slate-800 px-3 py-[0.65rem] text-left text-[0.73rem] leading-[1.45] whitespace-pre-line text-slate-200 opacity-0 shadow-xl content-[attr(data-tooltip)] transition duration-150; transform: translate(-50%, 4px); }
+  .meal-entry:hover { @apply z-10 overflow-visible bg-brand-100; }
+  .meal-entry:hover::after { @apply opacity-100; transform: translate(-50%, 0); }
+
+  .picker-results { @apply my-[0.55rem] grid max-h-[180px] gap-[0.38rem] overflow-auto; }
+  .choice { @apply w-full bg-slate-100 text-left text-slate-700 shadow-none hover:bg-brand-100 hover:shadow-none; }
+  .selected-row { @apply flex min-w-0 animate-row-in flex-wrap items-center gap-[0.55rem] border-b border-slate-200 py-[0.58rem]; }
+  .selected-row label, .selected-row span { @apply m-0 min-w-0 flex-[1_1_160px] break-words; }
+  .selected-row input { @apply w-auto max-w-[120px] flex-[1_1_90px]; }
+  .selected-row button { @apply flex-[0_1_auto] px-[0.62rem] py-[0.45rem] text-[0.8rem]; }
+
+  .nutrition-table { @apply w-full min-w-[620px] border-collapse; }
+  .nutrition-table th, .nutrition-table td { @apply border-b border-slate-200 p-[0.55rem] text-right; }
+  .nutrition-table th:first-child, .nutrition-table td:first-child { @apply text-left; }
+  .table-scroll { @apply max-w-full overflow-auto rounded-xl border border-slate-200; }
+  .total-row { @apply bg-brand-50/70 font-bold; }
+
+  .modal-overlay { @apply fixed inset-0 z-40 grid animate-fade-in place-items-center overflow-hidden bg-slate-950/50 p-[clamp(0.7rem,3vw,2rem)] backdrop-blur-md; overscroll-behavior: contain; }
+  .modal { @apply flex w-[min(100%,560px)] animate-modal-in flex-col overflow-hidden rounded-[22px] border border-white/75 bg-surface shadow-modal; max-height: min(780px, calc(100dvh - 1.4rem)); }
+  .modal-wide { @apply w-[min(100%,980px)]; }
+  .modal-header { @apply flex items-center justify-between gap-4 border-b border-slate-200 bg-linear-to-br from-white to-brand-50/60 px-5 py-[1.1rem]; }
+  .modal-header h2 { @apply m-0 min-w-0 text-[clamp(1.15rem,4vw,1.4rem)] text-brand-950 break-words; }
+  .modal-close { @apply grid h-[34px] w-[34px] shrink-0 place-items-center rounded-lg bg-slate-100 p-0 text-[1.55rem] leading-none text-slate-500 shadow-none hover:bg-slate-200 hover:text-slate-600 hover:shadow-none; }
+  .modal-body { @apply min-h-0 min-w-0 overflow-auto p-[clamp(1rem,3vw,1.45rem)]; overscroll-behavior: contain; }
+  .modal-body h3 { @apply mt-[1.15rem] mb-[0.55rem] text-base text-slate-700; }
+  .modal-subtitle { @apply mt-0 mb-[1.1rem] font-semibold text-slate-500; }
+  .modal-confirmation { @apply m-0 leading-[1.55] text-slate-600; }
+  .modal-actions { @apply mt-[1.4rem] flex flex-wrap justify-end gap-[0.6rem]; }
+  .modal-actions button { @apply min-w-[112px]; }
+
+  .inline-field { @apply mt-[0.6rem] flex flex-wrap gap-[0.55rem]; }
+  .inline-field input { @apply flex-[1_1_220px]; }
+  .inline-field button { @apply flex-[0_1_auto]; }
+  .secondary { @apply bg-brand-100 text-brand-700 shadow-none hover:bg-brand-200 hover:shadow-none; }
+  .selection-list { @apply mt-[0.6rem] grid; }
+  .nutrition-fields { @apply mt-4 grid grid-cols-2 gap-[0.8rem]; }
+  .nutrition-fields label { @apply m-0 grid min-w-0 gap-[0.35rem] text-[0.88rem] font-semibold text-slate-600; }
+  .modal-primary { @apply mt-[1.2rem] w-full; }
+
+  .shopping-list { @apply m-0 grid list-none gap-[0.35rem] p-0; }
+  .shopping-list li { @apply flex justify-between gap-4 rounded-[9px] border border-slate-200 bg-slate-50 px-3 py-[0.7rem]; }
+  .shopping-list strong { @apply shrink-0 text-brand-700; }
+
+  .toast-stack { @apply fixed right-4 bottom-4 z-50 grid w-[min(360px,calc(100vw-2rem))] gap-2; }
+  .toast { @apply animate-toast-in rounded-[10px] bg-slate-700 px-4 py-[0.8rem] text-white shadow-xl; }
+  .toast.error { @apply bg-red-700; }
+  .toast.success { @apply bg-emerald-600; }
+
+  .loading-state { @apply grid min-h-40 animate-pulse place-items-center font-medium text-slate-500; }
+}
+
+@media (max-width: 900px) {
+  .sidebar { @apply w-[205px] px-[0.7rem] py-5; }
+  .sidebar h1 { @apply px-[0.55rem]; }
+  main { @apply p-5; }
+}
+
+@media (max-width: 680px) {
+  .app-shell { @apply block; }
+  .sidebar { @apply static min-h-0 w-full border-r-0 border-b border-slate-200 px-4 py-[0.9rem]; }
+  .sidebar h1 { @apply mt-0 mb-[0.7rem] p-0; }
+  .sidebar nav { @apply grid-cols-5 gap-[0.4rem]; }
+  .sidebar nav button { @apply justify-center px-[0.35rem] py-[0.65rem] text-center text-[0.8rem]; }
+  .dashboard-heading button, .plan-heading button { @apply w-full; }
+  main { @apply p-4; }
+  .hero { @apply min-h-0 p-[1.1rem]; }
+  .hero input, .hero button { @apply w-full max-w-none basis-full; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr)); }
+  .card-actions button { @apply basis-full; }
+  .plan-wrap { max-height: calc(100dvh - 155px); }
+  .plan-heading { @apply items-stretch; }
+  .modal-overlay { @apply items-end p-0; }
+  .modal { @apply w-full rounded-b-none; max-height: min(88dvh, 760px); }
+  .modal-header { @apply p-4; }
+  .modal-actions button { @apply flex-[1_1_130px]; }
+  .nutrition-fields { @apply grid-cols-1; }
+}
+
+@media (max-width: 380px) {
+  .sidebar nav { @apply grid-cols-2; }
+  .grid { @apply grid-cols-1; }
+  .selected-row input { @apply w-full max-w-none; }
+  .selected-row button { @apply flex-[1_1_auto]; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
