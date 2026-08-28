@@ -2,7 +2,7 @@
 
 Aplicación de escritorio para organizar recetas, consultar información nutricional y planificar comidas semanales.
 
-Está construida con **React 19**, **Vite**, **Tauri 2**, Rust y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
+Está construida con **React 19**, **TypeScript**, **Vite**, **Tauri 2**, Rust y SQLite. Los datos se almacenan localmente, por lo que la aplicación puede usarse sin conexión.
 
 ## Funciones
 
@@ -66,7 +66,7 @@ Las imágenes seleccionadas para recetas también se guardan en ese directorio d
 ## Estructura
 
 ```text
-src/          Aplicación React, componentes, servicios y estilos
+src/          Aplicación React + TypeScript organizada por funcionalidades
 dist/         Frontend compilado por Vite (generado)
 src-tauri/    Backend Rust, configuración Tauri y base inicial SQLite
 data/         Datos fuente de ingredientes

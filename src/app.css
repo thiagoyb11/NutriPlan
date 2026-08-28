@@ -602,7 +602,8 @@ main {
   display: grid;
   place-items: center;
   padding: clamp(0.7rem, 3vw, 2rem);
-  overflow: auto;
+  overflow: hidden;
+  overscroll-behavior: contain;
   background: rgb(15 23 42 / 0.48);
   backdrop-filter: blur(6px);
   animation: fade-in 0.18s ease both;
@@ -658,9 +659,11 @@ main {
   box-shadow: none;
 }
 .modal-body {
+  min-height: 0;
   min-width: 0;
   padding: clamp(1rem, 3vw, 1.45rem);
   overflow: auto;
+  overscroll-behavior: contain;
 }
 .modal-body h3 {
   margin: 1.15rem 0 0.55rem;
