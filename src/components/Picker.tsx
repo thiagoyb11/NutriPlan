@@ -1,12 +1,20 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
-export default function Picker({
+interface PickerProps<T extends { id: number }> {
+  items: T[];
+  labelOf: (item: T) => string;
+  onPick: (item: T) => void;
+  placeholder: string;
+  renderEmpty?: (query: string, clear: () => void) => ReactNode;
+}
+
+export default function Picker<T extends { id: number }>({
   items,
   labelOf,
   onPick,
   placeholder,
   renderEmpty,
-}) {
+}: PickerProps<T>) {
   const [query, setQuery] = useState("");
   const matches = useMemo(() => {
     const value = query.trim().toLocaleLowerCase("es");
@@ -19,7 +27,7 @@ export default function Picker({
       : [];
   }, [items, labelOf, query]);
 
-  const pick = (item) => {
+  const pick = (item: T) => {
     onPick(item);
     setQuery("");
   };
